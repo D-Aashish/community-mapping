@@ -48,7 +48,7 @@ INSTALLED_APPS = [
 
     # 'django.contrib.gis',
 
-    'testdb',
+    # 'testdb',
     'mapping',
 
     'theme',

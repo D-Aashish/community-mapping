@@ -1,4 +1,5 @@
 {% load static tailwind_tags %}
+{% tailwind_css %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,8 +28,7 @@
   </script>
   {% load static %}
   <link rel="stylesheet" href="{% static 'mapping/style.css' %}">
-  {% load static tailwind_tags %}
-  {% tailwind_css %}
+  {% comment %} {% load static tailwind_tags %} {% endcomment %}
 </head>
 <body>
   <nav class="bg-gray-800">
@@ -117,14 +117,11 @@
   </nav>
 
 
-{% comment %} Description section {% endcomment %}
-
-{% comment %} <div class="h-[calc(100vh-64px)]">  {% endcomment %}
 <div class="relative w-full h-screen overflow-hidden"> 
-  <div id="map" class="absolute inset-0 w-full h-full z-0" >
   {{ point|json_script:"point_json" }}
+  <div id="map" class="absolute inset-0 w-full h-full z-0" >
 </div>
-<div id="LocDescrip" class="absolute top-20z-20 bg-red-500 shadow-lg p-4 w-[40%] max-w-md overflow-auto">
+<div id="LocDescrip" class="absolute top-20z-20 bg-red-500 shadow-lg p-4 w-[40%] max-w-md overflow-auto hidden">
   <h2 class="text-2xl font-semibold mt-4 text-gray-800">Location Name</h2>
   <p class="text-gray-600 text-sm leading-relaxed mb-4">
     This is a short description of the location. It can include historical context, notable features, or any interesting facts about the place.
@@ -161,11 +158,6 @@
 
 </div>
 
-{% comment %} <div id="map" style="height:calc(100vh - 64px); width:100%; z-index: 1;">
-  {{point|json_script:"point_json"}}
-</div> {% endcomment %}
-
-{% comment %} </div> {% endcomment %}
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
     crossorigin=""></script>
@@ -178,10 +170,12 @@
     var markersLayer = L.layerGroup().addTo(map);
 
     const pointJsonElement = document.getElementById('point_json');
+
     if (!pointJsonElement) {
         console.error("point_json element not found");
     } else {
         console.log("Raw point_json content:", pointJsonElement.textContent);
+
         try {
             let parks = JSON.parse(pointJsonElement.textContent);
             console.log("Parsed parks:", parks);
@@ -197,8 +191,6 @@
                     console.log(`Adding marker for park at index ${index}:`, park);
                     var marker = L.marker([park.latitude, park.longitude]) 
                         .addTo(map).bindPopup(`Name: ${park.name} <br> Park ID: ${park.id}<br>Lat: ${park.latitude}<br>Lng: ${park.longitude}`);
-
-
                         marker.parkId = park.id;
                         marker.on('click', function (e) {
                         if (deleteMarkerMode) {
@@ -259,13 +251,17 @@
                             }
                           });
                         }
-                      })
-                    });
-                  }
-        }catch (e) {
+
+                            }
+                        )
+                          });
+                        }
+                      }
+                    //};
+        catch (e) {
                     console.error("Error parsing point_json:", e);
                 }
-              };          
+              };
 
     let addMarkerMode = false;
     let deleteMarkerMode = false;

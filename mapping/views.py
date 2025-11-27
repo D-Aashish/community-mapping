@@ -39,7 +39,6 @@ def location(request):
 # @csrf_exempt  # Temporarily disable CSRF for simplicity (use proper CSRF handling in production)
 @api_view(['POST'])
 def add_park(request):
-    # if request.method == 'POST':
         try:
             data = json.loads(request.body)
             # data = request.data
@@ -52,6 +51,9 @@ def add_park(request):
                 latitude=latitude,
                 longitude=longitude
             )
+
+            ParkDescription.objects.create(Park=park, description=data['description'])
+
             return JsonResponse({'message': 'Park added successfully', 'id': park.id}, status=201)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
@@ -93,25 +95,43 @@ def edit_park(request, park_id):
             print(f"An exception occurred: {e}")
             return Response({'error': 'Internal server error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 @api_view(['GET'])
-def showDescription(request,park_id):
+def park_description(request,park_id):
         try: 
             park = Park.objects.get(id=park_id)
-            serialized = ParkSerializer(park)
+            description = ParkDescription.objects.get(Park=park)
 
-            # print(park.id)
-            return JsonResponse({
-                'success': True,
-                'data': serialized.data
-            })
-        except Park.DoesNotExist:
-            return JsonResponse({
-                'success': False,
-                'error': 'Park not found'
-            }, status=404)
-        except Exception as e:
-            return JsonResponse({
-                'success': False,
-                'error': str(e)
-            }, status=500)
+            data = {
+            'description': description.description,
+            'address': description.address,
+            'phone': description.phone,
+            'email': description.email,
+            'image_url': description.image.url if description.image else None
+        }
+        except ParkDescription.DoesNotExist:
+            data = None
+  
+        # return render(request, 'mapping/indexx.html')
+        return JsonResponse({'success': True, 'data': data})
+
+
+def create_park_description(request, park_id):
+    try:
+        park = Park.objects.get(id=park_id)
+    except Park.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Invalid park ID'}, status=404)
+
+    if ParkDescription.objects.filter(Park=park).exists():
+        return JsonResponse({'success': False, 'error': 'Description already exists'}, status=400)
+
+    data = json.loads(request.body)
+    desc = ParkDescription.objects.create(
+        Park=park,
+        description=data.get('description', ''),
+        address=data.get('address', ''),
+        phone=data.get('phone', ''),
+        email=data.get('email', ''),
+    )
+    return JsonResponse({'success': True, 'message': 'Description added'})
+
 def map(request):
     return render(request, 'mapping/map.html')

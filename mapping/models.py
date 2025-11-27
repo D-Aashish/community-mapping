@@ -56,7 +56,7 @@ class CustomUser(AbstractUser):
 
 class Park(models.Model):
     name = models.CharField(max_length=100, help_text="Official name of the park", blank=True)
-    description = models.TextField(blank=True)
+    # description = models.TextField(blank=True)
     latitude = models.FloatField(help_text="Geographic latitude in decimal degrees")
     longitude = models.FloatField(help_text="Geographic longitude in decimal degrees")
     created_at = models.DateTimeField(default=timezone.now)
@@ -70,8 +70,8 @@ class Park(models.Model):
         return self.name
 
 class ParkDescription(models.Model):
-    name = models.OneToOneField(Park, on_delete= models.CASCADE , primary_key=True)
-    description = models.TextField()
+    Park = models.OneToOneField(Park, on_delete= models.CASCADE , primary_key=True)
+    description = models.TextField(blank=True)
     address = models.CharField(max_length=255, blank=True, help_text="Full address of the park")
     phone = models.CharField(max_length=20, blank=True)
     email = models.EmailField(blank=True)
