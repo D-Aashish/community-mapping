@@ -56,7 +56,7 @@ class CustomUser(AbstractUser):
 
 class Park(models.Model):
     name = models.CharField(max_length=100, help_text="Official name of the park", blank=True)
-    # description = models.TextField(blank=True)
+    description = models.TextField(blank=True,null=True)
     latitude = models.FloatField(help_text="Geographic latitude in decimal degrees")
     longitude = models.FloatField(help_text="Geographic longitude in decimal degrees")
     created_at = models.DateTimeField(default=timezone.now)

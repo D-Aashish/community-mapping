@@ -1,10 +1,10 @@
 import json
 from rest_framework import generics
-from .models import Park
 from .serializers import ParkSerializer
 from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework import status
+from .models import Park, ParkDescription
 
 
 from rest_framework.decorators import api_view
@@ -51,8 +51,8 @@ def add_park(request):
                 latitude=latitude,
                 longitude=longitude
             )
-
-            ParkDescription.objects.create(Park=park, description=data['description'])
+            description_text = data.get('description', '')  # default to empty string if missing
+            ParkDescription.objects.create(Park=park, description=description_text)
 
             return JsonResponse({'message': 'Park added successfully', 'id': park.id}, status=201)
         except Exception as e:
