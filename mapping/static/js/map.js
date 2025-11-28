@@ -6,38 +6,20 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 var markersLayer = L.layerGroup().addTo(map);
 
-// CSRF helper function
-function getCsrfToken() {
-  const name = 'csrftoken';
-  const cookies = document.cookie.split(';');
-  for (let cookie of cookies) {
-    const [key, value] = cookie.trim().split('=');
-    if (key === name) return value;
-  }
-  return null;
+if (typeof L.control.locate === "function") {
+    L.control.locate({
+        position: "topleft",
+        setView: "once",
+        drawMarker: false,
+        showPopup: false,
+        strings: { title: "Go to my current location" }
+    }).addTo(map);
+} else {
+    console.warn("LocateControl plugin is not loaded!");
 }
 
-// Add/Edit/Delete modes
-let addMarkerMode = false;
-let deleteMarkerMode = false;
-let editMarkerMode = false;
 
-// Enable modes
-function enableAddMarkerMode(event) {
-  event.preventDefault();
-  addMarkerMode = true;
-  console.log("Add marker mode enabled. Click on the map to place a marker.");
-}
-function enableDeleteMarkerMode(event){
-  event.preventDefault();
-  deleteMarkerMode = true;
-  console.log("Delete marker mode enabled");
-}
-function enableEditMarkerMode(event){
-  event.preventDefault();
-  editMarkerMode = true;
-  console.log("Edit marker mode enabled");
-}
+
 
 // Load markers from JSON
 const pointJsonElement = document.getElementById('point_json');

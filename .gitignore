@@ -17,6 +17,7 @@ __pycache__/
 
 db.sqlite3
 test.md
+bug.md
 
 # Local settings
 /CommunityMapping/settings/local.py
