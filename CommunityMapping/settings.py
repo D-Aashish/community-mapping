@@ -50,6 +50,7 @@ INSTALLED_APPS = [
 
     # 'testdb',
     'mapping',
+    'users',
 
     'theme',
     'tailwind',

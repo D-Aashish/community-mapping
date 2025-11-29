@@ -133,5 +133,16 @@ def create_park_description(request, park_id):
     )
     return JsonResponse({'success': True, 'message': 'Description added'})
 
+def signup_view(request):
+    if request.method == "POST":
+        email = request.POST["email"]
+        password = request.POST["password"]
+
+        user = User.objects.create_user(email=email, password=password)
+        login(request, user)   # auto login after signup
+
+        return redirect("home")
+
+    return render(request, "signup.html")
 def map(request):
     return render(request, 'mapping/map.html')

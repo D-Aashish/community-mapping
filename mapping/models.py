@@ -1,16 +1,11 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser,UserManager, BaseUserManager
+from django.contrib.auth.models import AbstractUser,UserManager
+from django.contrib.auth.base_user import BaseUserManager
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 
-# Always run migrate after makemigrations
-# When adding new models:
-# Create the model
-# makemigrations
-# migrate
-# Then add fields/relationships
-
+# ------------------------ Custom User Manager ------------------------
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
@@ -32,20 +27,16 @@ class CustomUserManager(BaseUserManager):
 
         return self.create_user(email, password, **extra_fields)
 
-
+# ------------------------ Custom User ------------------------
 class CustomUser(AbstractUser):
     username = models.CharField(max_length=150, null=True, blank=True)
-    email= models.EmailField(max_length=254,
-                             unique=True,
-                             error_messages={
-            'unique': _("A user with that email already exists."),
-        })
+    email= models.EmailField(max_length=254, unique=True, error_messages={'unique': _("A user with that email already exists."),})
     # profile_picture = models.ImageField(upload_to='profile_pics/',height_field=None, width_field=None,max_length=100, blank = True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
     
-    objects = CustomUserManager()   # Explicitly declare the manager
+    objects = CustomUserManager()
     
     class Meta:
         verbose_name = _('user')
