@@ -12,20 +12,20 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import environ
 import os
 
-env = environ.Env()
-environ.Env.read_env()
 
 from pathlib import Path
-print("DB Name:", env("DB_NAME"))
+# print("DB Name:", env("DB_NAME"))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+env = environ.Env()
+environ.Env.read_env(BASE_DIR / '.env')
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-SECRET_KEY = env("SECRET_KEY")
+SECRET_KEY = "django-insecure-f*=z27nbwc_f9^!jd0u_s-!o%f5#0)mzgsz3jzq#b7nqib+!7n"
 # print("Loaded environment variables:")
 # print(env("SECRET_KEY"))
 
@@ -62,7 +62,7 @@ TAILWIND_APP_NAME = 'theme'
 
 NPM_BIN_PATH = "C:/Program Files/nodejs/npm.cmd"
 
-AUTH_USER_MODEL = 'mapping.CustomUser'
+AUTH_USER_MODEL = 'users.CustomUser'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -81,7 +81,8 @@ ROOT_URLCONF = 'CommunityMapping.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS':  [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [BASE_DIR / "templates"], 
+        # 'DIRS':  [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -111,12 +112,8 @@ REST_FRAMEWORK = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env("DB_NAME"),
-        'USER': env("DB_USER"),
-        'PASSWORD': env("DB_PASSWORD"),
-        'HOST': env("DB_HOST"),
-        'PORT': env("DB_PORT"),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -156,10 +153,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR,'Mapping', 'static')]
-STATICFILES_DIRS = [BASE_DIR / "mapping/static"]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+# STATICFILES_DIRS = [BASE_DIR / "mapping/static"]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

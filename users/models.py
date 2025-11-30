@@ -1,5 +1,7 @@
 from django.contrib.auth.base_user import BaseUserManager
+from django.contrib.auth.models import AbstractUser,UserManager
 from django.utils.translation import gettext_lazy as _
+from django.db import models
 
 
 class CustomUserManager(BaseUserManager):
@@ -32,3 +34,20 @@ class CustomUserManager(BaseUserManager):
         if extra_fields.get("is_superuser") is not True:
             raise ValueError(_("Superuser must have is_superuser=True."))
         return self.create_user(email, password, **extra_fields)
+
+class CustomUser(AbstractUser):
+    username = models.CharField(max_length=150, null=True, blank=True)
+    email= models.EmailField(max_length=254, unique=True, error_messages={'unique': _("A user with that email already exists."),})
+    # profile_picture = models.ImageField(upload_to='profile_pics/',height_field=None, width_field=None,max_length=100, blank = True)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+    
+    objects = CustomUserManager()
+    
+    class Meta:
+        verbose_name = _('user')
+        verbose_name_plural = _('users')
+
+    def __str__(self):
+        return self.email

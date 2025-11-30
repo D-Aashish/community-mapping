@@ -13,7 +13,7 @@ __pycache__/
 .env.*.local
 /env
 .venv
-
+.env
 
 db.sqlite3
 test.md

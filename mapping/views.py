@@ -40,8 +40,8 @@ def location(request):
 @api_view(['POST'])
 def add_park(request):
         try:
-            data = json.loads(request.body)
-            # data = request.data
+            data = request.data
+            print("This is the data", data)
             latitude = data.get('latitude')
             longitude = data.get('longitude')
             # park = Marker.objects.create(latitude=lat, longitude=lng)
@@ -51,13 +51,11 @@ def add_park(request):
                 latitude=latitude,
                 longitude=longitude
             )
-            description_text = data.get('description', '')  # default to empty string if missing
-            ParkDescription.objects.create(Park=park, description=description_text)
-
+            description_text = data.get('description', '')
+            ParkDescription.objects.create(park=park, description=description_text)
             return JsonResponse({'message': 'Park added successfully', 'id': park.id}, status=201)
         except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
-    # return JsonResponse({'error': 'Invalid request method'}, status=405)
+            return JsonResponse({'error in add': str(e)}, status=500)
 
 @api_view(['DELETE'])
 def delete_park(request, park_id):
@@ -133,16 +131,16 @@ def create_park_description(request, park_id):
     )
     return JsonResponse({'success': True, 'message': 'Description added'})
 
-def signup_view(request):
-    if request.method == "POST":
-        email = request.POST["email"]
-        password = request.POST["password"]
+# def signup_view(request):
+#     if request.method == "POST":
+#         email = request.POST["email"]
+#         password = request.POST["password"]
 
-        user = User.objects.create_user(email=email, password=password)
-        login(request, user)   # auto login after signup
+#         user = User.objects.create_user(email=email, password=password)
+#         login(request, user)   # auto login after signup
 
-        return redirect("home")
+#         return redirect("home")
 
-    return render(request, "signup.html")
+#     return render(request, "signup.html")
 def map(request):
     return render(request, 'mapping/map.html')
