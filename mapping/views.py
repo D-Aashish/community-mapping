@@ -44,15 +44,14 @@ def add_park(request):
             print("This is the data", data)
             latitude = data.get('latitude')
             longitude = data.get('longitude')
-            # park = Marker.objects.create(latitude=lat, longitude=lng)
 
             park = Park.objects.create(
                 name=f"Park at {latitude}, {longitude}",
                 latitude=latitude,
                 longitude=longitude
             )
-            description_text = data.get('description', '')
-            ParkDescription.objects.create(park=park, description=description_text)
+            # description_text = data.get('description', '')
+            # ParkDescription.objects.create(park=park, description=description_text)
             return JsonResponse({'message': 'Park added successfully', 'id': park.id}, status=201)
         except Exception as e:
             return JsonResponse({'error in add': str(e)}, status=500)
