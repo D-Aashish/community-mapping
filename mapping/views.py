@@ -142,4 +142,8 @@ def create_park_description(request, park_id):
 
 #     return render(request, "signup.html")
 def map(request):
+    if request.method == 'POST':
+        if action == 'logout':
+                logout(request)
+                return redirect('login') 
     return render(request, 'mapping/map.html')

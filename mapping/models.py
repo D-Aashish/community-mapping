@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 
 class Park(models.Model):
+    creater = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,related_name='parks')
     name = models.CharField(max_length=100, help_text="Official name of the park", blank=True)
     description = models.TextField(blank=True,null=True)
     latitude = models.FloatField(help_text="Geographic latitude in decimal degrees")
